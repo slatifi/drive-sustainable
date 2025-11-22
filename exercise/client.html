@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Basket</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: #f9fafb;
+      }
+
+      .container {
+        max-width: 700px;
+        margin: 2rem auto;
+        padding: 2rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        min-height: 100vh;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        color: #1a1a1a;
+        margin: 0 0 0.5rem 0;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        color: #6b7280;
+        font-size: 1rem;
+        margin: 0;
+      }
+
+      h2 {
+        color: #374151;
+        margin: 0 0 1.25rem 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      section {
+        margin: 2rem 0;
+        padding: 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e5e7eb;
+      }
+
+      .error {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        color: #991b1b;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+        border: 1px solid #fca5a5;
+        font-weight: 500;
+      }
+
+      .error.show {
+        display: flex;
+      }
+
+      .error-icon {
+        font-size: 1.25rem;
+      }
+
+      .item-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+
+      button {
+        padding: 0.875rem 1.5rem;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        text-transform: capitalize;
+      }
+
+      .add-btn {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+      }
+
+      .add-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+
+      .add-btn:active:not(:disabled) {
+        transform: translateY(0);
+      }
+
+      .btn-icon {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+
+      button:disabled {
+        background: #d1d5db;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .basket-items {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .basket-item {
+        display: flex;
+        align-items: center;
+        padding: 1.25rem;
+        background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        gap: 1rem;
+        transition: all 0.2s ease;
+      }
+
+      .basket-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transform: translateY(-2px);
+      }
+
+      .item-emoji {
+        font-size: 2rem;
+        flex-shrink: 0;
+      }
+
+      .item-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .item-name {
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: #1f2937;
+        text-transform: capitalize;
+      }
+
+      .item-quantity {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+
+      .remove-btn {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+        text-transform: none;
+      }
+
+      .remove-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      }
+
+      .empty {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #9ca3af;
+        display: none;
+      }
+
+      .empty.show {
+        display: block;
+      }
+
+      .empty-icon {
+        font-size: 4rem;
+        display: block;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+
+      .empty p {
+        margin: 0.5rem 0;
+        font-size: 1.125rem;
+      }
+
+      .empty-hint {
+        font-size: 0.875rem;
+        color: #d1d5db;
+      }
+
+      .total {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        border: 2px solid #3b82f6;
+      }
+
+      .total-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .total-label {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e40af;
+      }
+
+      .total-amount {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1e40af;
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          padding: 1rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        section {
+          padding: 1.5rem;
+        }
+
+        .item-buttons {
+          grid-template-columns: 1fr;
+        }
+
+        .total-content {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🛒 Shopping Basket</h1>
+        <p class="subtitle">Add items to your cart and manage your purchases</p>
+      </header>
+
+      <div class="error" id="errorMessage" role="alert">
+        <span class="error-icon">⚠️</span>
+        <span id="errorText"></span>
+      </div>
+
+      <section class="add-items">
+        <h2>Available Items</h2>
+        <div class="item-buttons" id="availableItems"></div>
+      </section>
+
+      <section class="basket">
+        <h2>Your Basket</h2>
+        <div class="empty show" id="emptyBasket">
+          <span class="empty-icon">🛍️</span>
+          <p>Your basket is empty</p>
+          <p class="empty-hint">Add some items to get started!</p>
+        </div>
+        <ul class="basket-items" id="basketItems"></ul>
+      </section>
+
+      <section class="total">
+        <div class="total-content">
+          <span class="total-label">Total Price</span>
+          <span class="total-amount" id="totalAmount">$0.00</span>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const BASE_URL = "http://localhost:5001";
+      const AVAILABLE_ITEMS = ["grapes", "apple", "banana"];
+
+      let isLoading = false;
+      let basket = [];
+      let total = 0;
+
+      const itemEmojis = {
+        grapes: "🍇",
+        apple: "🍎",
+        banana: "🍌",
+      };
+
+      function showError(message) {
+        const errorEl = document.getElementById("errorMessage");
+        const errorText = document.getElementById("errorText");
+        errorText.textContent = message;
+        errorEl.classList.add("show");
+
+        setTimeout(() => {
+          errorEl.classList.remove("show");
+        }, 5000);
+      }
+
+      function setLoading(loading) {
+        isLoading = loading;
+        const buttons = document.querySelectorAll("button");
+        buttons.forEach((btn) => {
+          btn.disabled = loading;
+        });
+      }
+
+      async function loadBasket() {
+        try {
+          const [basketRes, totalRes] = await Promise.all([
+            fetch(`${BASE_URL}/basket`),
+            fetch(`${BASE_URL}/basket/total`),
+          ]);
+
+          const basketData = await basketRes.json();
+          const totalData = await totalRes.json();
+
+          basket = basketData.items || [];
+          total = totalData.price || 0;
+
+          renderBasket();
+          renderTotal();
+        } catch (error) {
+          basket = [];
+          total = 0;
+          renderBasket();
+          renderTotal();
+        }
+      }
+
+      async function addItem(name) {
+        setLoading(true);
+        try {
+          const response = await fetch(`${BASE_URL}/basket`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to add item");
+          }
+
+          await loadBasket();
+        } catch (error) {
+          showError(error.message || "Failed to add item");
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      async function removeItem(name) {
+        setLoading(true);
+        try {
+          const response = await fetch(`${BASE_URL}/basket`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to remove item");
+          }
+
+          await loadBasket();
+        } catch (error) {
+          showError(error.message || "Failed to remove item");
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      function renderAvailableItems() {
+        const container = document.getElementById("availableItems");
+        container.innerHTML = AVAILABLE_ITEMS.map(
+          (item) => `
+				<button class="add-btn" onclick="addItem('${item}')">
+					<span class="btn-icon">+</span>
+					${item}
+				</button>
+			`
+        ).join("");
+      }
+
+      function renderBasket() {
+        const emptyEl = document.getElementById("emptyBasket");
+        const itemsEl = document.getElementById("basketItems");
+
+        if (basket.length === 0) {
+          emptyEl.classList.add("show");
+          itemsEl.innerHTML = "";
+        } else {
+          emptyEl.classList.remove("show");
+          itemsEl.innerHTML = basket
+            .map(
+              (item) => `
+					<li class="basket-item">
+						<span class="item-emoji">${itemEmojis[item.name] || "📦"}</span>
+						<div class="item-info">
+							<span class="item-name">${item.name}</span>
+							<span class="item-quantity">Quantity: ${item.quantity}</span>
+						</div>
+						<button class="remove-btn" onclick="removeItem('${item.name}')">
+							Remove one
+						</button>
+					</li>
+				`
+            )
+            .join("");
+        }
+      }
+
+      function renderTotal() {
+        const totalEl = document.getElementById("totalAmount");
+        totalEl.textContent = `$${total.toFixed(2)}`;
+      }
+
+      renderAvailableItems();
+      loadBasket();
+    </script>
+  </body>
+</html>

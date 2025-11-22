@@ -1,0 +1,31 @@
+# General
+*.DS_Store
+.vscode/
+
+# LaTex
+*.tex
+**/_minted*
+*.aux
+*.bbl
+*.blg
+*.tcp
+*.toc
+*.tps
+*.synctex.gz
+*.out
+*.synctex(busy)
+**/cache/**
+*.bcf
+*.fdb_latexmk
+*.fls
+*.run.xml
+*.pyg
+*.glsdefs
+*.ist
+*.spl
+result/
+**/listings/
+
+# Python
+**/__pycache__/
+**/venv/
