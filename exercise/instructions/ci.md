@@ -8,7 +8,7 @@ Now that we have some tests written for our `Basket` service, let's set up Conti
    - In your repository, navigate to a directory called `.github/workflows`.
    - Inside this directory, create a new file named `ci.yml`.
 2. **Define the workflow**: Copy the template below into your `ci.yml` file and add the following steps to run the tests:
-   - Set up Python - use the `@actions/setup-python@2` action to specify the Python version.
+   - Set up Python - use the `actions/setup-python@v5` action to specify the Python version.
    - Run the command `python3 -m unittest discover` to execute the tests within the `exercise` directory.
 
 ```yaml

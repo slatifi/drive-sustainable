@@ -19,7 +19,7 @@ This exercise will help you practice basic Git commands.
 4. **Create a new repository** on GitHub and copy the repository URL.
 5. **Add the new remote origin**.
 6. **Create a branch** called `feature`.
-7. **Make some changes** to `exercise/instructions/hello.txt`.
+7. **Make some changes** to `exercise/hello.txt`.
 8. **Stage and commit** your changes with a meaningful message.
 9. **Push your changes** to the `feature` branch on the new remote repository.
 
